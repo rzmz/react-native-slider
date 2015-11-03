@@ -6,7 +6,8 @@ var {
   StyleSheet,
   PanResponder,
   View,
-  Platform
+  Platform,
+  Text
 } = React;
 
 var TRACK_SIZE = 4;
@@ -37,6 +38,11 @@ var Slider = React.createClass({
      * the value, the component won't be reset to its inital value.
      */
     value: PropTypes.number,
+
+	/**
+     * Whether to show the (rounded) value label
+     */
+	showValue: PropTypes.bool,
 
     /**
      * Initial minimum value of the slider. Default value is 0.
@@ -108,6 +114,11 @@ var Slider = React.createClass({
      */
     thumbStyle: View.propTypes.style,
 
+	/**
+     * The style applied to the label.
+     */
+    textStyle: Text.propTypes.style,
+
     /**
      * Set this to true to visually see the thumb touch rect in green.
      */
@@ -156,6 +167,8 @@ var Slider = React.createClass({
       style,
       trackStyle,
       thumbStyle,
+	  textStyle,
+	  showValue,
       debugTouchArea,
       ...other
     } = this.props;
@@ -196,7 +209,13 @@ var Slider = React.createClass({
             {backgroundColor: thumbTintColor, marginTop: -(trackSize.height + thumbSize.height) / 2},
             mainStyles.thumb, thumbStyle, {left: thumbLeft, ...valueVisibleStyle}
           ]}
-        />
+        >
+			{this.props.showValue && (<View style={[thumbStyle, {flex: 1, justifyContent: 'center', alignItems: 'center'}]}>
+				<Text style={[textStyle]}>
+					{Math.round(this.state.value)}
+				</Text>
+			</View>)}
+		</View>
         <View
           style={[defaultStyles.touchArea, touchOverflowStyle]}
           {...this._panResponder.panHandlers}>
